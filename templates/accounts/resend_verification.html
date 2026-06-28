@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이메일 인증 - dept</title>
+  <meta name="description" content="dept 계정 활성화를 위한 이메일 인증 메일을 발송합니다.">
+  
+  <!-- RemixIcon for modern icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  
+  <!-- Custom Fonts & CSS -->
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}?v=1.0.5">
+  <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}?v=1.0.5">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      corePlugins: {
+        preflight: false,
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <!-- Back to Login Link -->
+    <a href="{% url 'accounts:login' %}" class="back-home">
+      <i class="ri-arrow-left-line"></i> 로그인으로 돌아가기
+    </a>
+
+    <!-- Interactive Background Blobs -->
+    <div class="auth-bg-blob auth-blob-1"></div>
+    <div class="auth-bg-blob auth-blob-2"></div>
+    <div class="auth-bg-blob auth-blob-interactive" id="interactive-blob"></div>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        
+        <!-- Auth Card Header -->
+        <div class="auth-header">
+          <a href="{% url 'main:index' %}" class="auth-logo">
+            DEPT
+          </a>
+          <h2>이메일 인증</h2>
+          <p>계정을 활성화하려면 이메일 인증을 진행해 주세요</p>
+        </div>
+
+        <!-- Messages Alerts -->
+        {% if messages %}
+        <div class="auth-messages">
+          {% for message in messages %}
+          <div class="auth-alert alert-{{ message.tags }}">
+            <i class="ri-error-warning-line alert-icon"></i>
+            <span class="alert-text">{{ message }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Progress Bar for Step 3 -->
+        <div class="signup-progress mb-[32px]">
+          <div class="progress-line-bg">
+            <div class="progress-line-fill w-0"></div>
+          </div>
+          <div class="progress-step active">
+            <div class="step-dot">
+              <i class="ri-mail-send-line"></i>
+            </div>
+            <span class="step-label">이메일 인증</span>
+          </div>
+          <div class="progress-step">
+            <div class="step-dot">
+              <i class="ri-file-list-3-line"></i>
+            </div>
+            <span class="step-label">추가 정보</span>
+          </div>
+          <div class="progress-step">
+            <div class="step-dot">
+              <i class="ri-shield-user-line"></i>
+            </div>
+            <span class="step-label">학생증 인증</span>
+          </div>
+        </div>
+
+        <!-- Verification Visual Icon Block -->
+        <div class="verify-icon-wrapper text-center my-[24px] flex flex-col items-center">
+          <div class="w-[84px] h-[84px] rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center mb-[20px] border border-solid border-[rgba(59,130,246,0.2)] shadow-[0_8px_24px_rgba(59,130,246,0.05)]">
+            <i class="ri-mail-send-line text-[2.8rem] text-[#3b82f6]"></i>
+          </div>
+          <p class="text-[0.95rem] text-[#4a5568] leading-[1.6] max-w-[320px] mx-auto font-medium text-center">
+            <span class="text-[#3b82f6]">{{ email }}</span>로<br>계정 활성화 링크가 전송되었습니다.<br>메일함에서 링크를 클릭해 주세요.
+          </p>
+        </div>
+
+        <!-- Resend Form -->
+        <form method="POST" action="" id="resend-form">
+          {% csrf_token %}
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-auth-submit w-full h-[50px] flex items-center justify-center gap-[8px] text-[1rem] font-semibold" id="submit-btn">
+            인증 메일 재발송 <i class="ri-send-plane-fill"></i>
+          </button>
+
+        </form>
+
+        <!-- Redirect to Login -->
+        <div class="auth-footer">
+          이미 인증을 완료하셨나요? <a href="{% url 'accounts:login' %}">로그인하기</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom JavaScript -->
+  <script src="{% static 'accounts/js/login.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('resend-form');
+      const submitBtn = document.getElementById('submit-btn');
+      if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+          if (submitBtn.dataset.submitted === 'true') {
+            e.preventDefault();
+            return;
+          }
+          submitBtn.dataset.submitted = 'true';
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '재발송 중... <i class="ri-loader-4-line animate-spin"></i>';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

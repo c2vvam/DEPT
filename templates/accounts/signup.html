@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 - DEPT</title>
+  <meta name="description" content="DEPT에 가입하여 대학생 조별과제 스트레스를 해결하고 효율적으로 협업하세요.">
+  
+  <!-- RemixIcon for modern icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  
+  <!-- Custom Fonts & CSS -->
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}?v=1.0.5">
+  <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}?v=1.0.5">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      corePlugins: {
+        preflight: false,
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <!-- Back to Home Link -->
+    <a href="{% url 'main:index' %}" class="back-home">
+      <i class="ri-arrow-left-line"></i> 홈으로 돌아가기
+    </a>
+
+    <!-- Interactive Background Blobs -->
+    <div class="auth-bg-blob auth-blob-1"></div>
+    <div class="auth-bg-blob auth-blob-2"></div>
+    <div class="auth-bg-blob auth-blob-interactive" id="interactive-blob"></div>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        
+        <!-- Auth Card Header -->
+        <div class="auth-header">
+          <a href="{% url 'main:index' %}" class="auth-logo">
+            DEPT
+          </a>
+          <h2>계정 생성</h2>
+          <p>DEPT와 함께 팀워크를 혁신해보세요.</p>
+        </div>
+
+        <!-- Messages Alerts -->
+        {% if messages %}
+        <div class="auth-messages">
+          {% for message in messages %}
+          <div class="auth-alert alert-{{ message.tags }}">
+            <i class="ri-error-warning-line alert-icon"></i>
+            <span class="alert-text">{{ message }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Signup Progress Bar -->
+        <div class="signup-progress">
+          <div class="progress-line-bg">
+            <div class="progress-line-fill" id="progress-line-fill"></div>
+          </div>
+          <div class="progress-step active" id="p-step-1">
+            <div class="step-dot">
+              <i class="ri-government-line"></i>
+            </div>
+            <span class="step-label">학교 선택</span>
+          </div>
+          <div class="progress-step" id="p-step-2">
+            <div class="step-dot">
+              <i class="ri-user-3-line"></i>
+            </div>
+            <span class="step-label">계정 정보</span>
+          </div>
+        </div>
+
+        <!-- Signup Form -->
+        <form method="POST" action="" id="signup-form" novalidate>
+          {% csrf_token %}
+
+          <!-- Step 1: School Selection -->
+          <div class="signup-step active" id="step-1">
+            <!-- School Select -->
+            <div class="form-group">
+              <label for="school" class="form-label">소속 대학교</label>
+              <div class="input-wrapper">
+                <select id="school" name="school" class="auth-input appearance-none" required>
+                  <option value="부산대학교" selected>부산대학교</option>
+                </select>
+                <i class="ri-government-line input-icon"></i>
+                <i class="ri-arrow-down-s-line absolute right-[16px] top-1/2 -translate-y-1/2 pointer-events-none text-[#a0aec0]"></i>
+              </div>
+              <span class="validation-error-text" id="error-school"></span>
+              <p class="text-[0.85rem] text-[#718096] mt-[12px] leading-[1.5] font-medium">
+                현재 DEPT는 <strong class="text-[#3b82f6]">부산대학교</strong> 학생들을 대상으로 시범 서비스 중입니다.
+              </p>
+            </div>
+
+            <!-- Next Step Button -->
+            <button type="button" class="btn-auth-submit mt-[24px]" id="btn-next-step">
+              다음 단계로 <i class="ri-arrow-right-line"></i>
+            </button>
+          </div>
+
+          <!-- Step 2: Account Information -->
+          <div class="signup-step" id="step-2">
+            <!-- Name Input -->
+            <div class="form-group">
+              <label for="name" class="form-label">이름</label>
+              <div class="input-wrapper">
+                <input 
+                  type="text" 
+                  id="name" 
+                  name="name" 
+                  class="auth-input" 
+                  placeholder="홍길동" 
+                  autocomplete="name" 
+                  enterkeyhint="next" 
+                  required
+                >
+                <i class="ri-user-line input-icon"></i>
+              </div>
+              <span class="validation-error-text" id="error-name"></span>
+            </div>
+
+            <!-- Email Input -->
+            <div class="form-group">
+              <label for="email" class="form-label">이메일 주소</label>
+              <div class="input-wrapper">
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  class="auth-input" 
+                  placeholder="name@pusan.ac.kr" 
+                  autocomplete="username" 
+                  enterkeyhint="next" 
+                  required
+                >
+                <i class="ri-mail-line input-icon"></i>
+              </div>
+              <span class="validation-error-text" id="error-email"></span>
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-group">
+              <label for="new-password" class="form-label">비밀번호</label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="new-password" 
+                  name="password" 
+                  class="auth-input" 
+                  placeholder="8자 이상의 비밀번호" 
+                  autocomplete="new-password" 
+                  enterkeyhint="next" 
+                  required
+                >
+                <i class="ri-lock-line input-icon"></i>
+                <button type="button" class="password-toggle" aria-label="비밀번호 보이기/숨기기">
+                  <i class="ri-eye-line"></i>
+                </button>
+              </div>
+              <span class="validation-error-text" id="error-password"></span>
+            </div>
+
+            <!-- Confirm Password Input -->
+            <div class="form-group">
+              <label for="confirm-password" class="form-label">비밀번호 확인</label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="confirm-password" 
+                  name="confirm-password" 
+                  class="auth-input" 
+                  placeholder="비밀번호를 한번 더 입력해주세요" 
+                  autocomplete="off" 
+                  enterkeyhint="done" 
+                  required
+                >
+                <i class="ri-lock-check-line input-icon"></i>
+              </div>
+              <span class="validation-error-text" id="error-confirm-password"></span>
+            </div>
+
+            <!-- Form Actions (Terms) -->
+            <div class="form-actions-group flex flex-col gap-[8px] mb-[20px] text-[13px]">
+              <!-- Age Agreement -->
+              <div class="flex items-center justify-between w-full">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="terms-age" name="terms_age" required>
+                  <span class="custom-checkbox">
+                    <i class="ri-check-line"></i>
+                  </span>
+                  <span class="terms-text">만 14세 이상입니다. (필수)</span>
+                </label>
+              </div>
+
+              <!-- Service Agreement -->
+              <div class="flex items-center justify-between w-full">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="terms-service" name="terms_service" required>
+                  <span class="custom-checkbox">
+                    <i class="ri-check-line"></i>
+                  </span>
+                  <span class="terms-text">이용약관 동의 (필수)</span>
+                </label>
+                <a href="{% url 'accounts:terms' %}" target="_blank" class="text-[12px] text-[#3b82f6] hover:underline flex items-center gap-[2px] z-10">
+                  보기 <i class="ri-external-link-line"></i>
+                </a>
+              </div>
+
+              <!-- Privacy Agreement -->
+              <div class="flex items-center justify-between w-full">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="terms-privacy" name="terms_privacy" required>
+                  <span class="custom-checkbox">
+                    <i class="ri-check-line"></i>
+                  </span>
+                  <span class="terms-text">개인정보처리방침 동의 (필수)</span>
+                </label>
+                <a href="{% url 'accounts:privacy' %}" target="_blank" class="text-[12px] text-[#3b82f6] hover:underline flex items-center gap-[2px] z-10">
+                  보기 <i class="ri-external-link-line"></i>
+                </a>
+              </div>
+            </div>
+            <span class="validation-error-text mb-[16px]" id="error-terms"></span>
+
+            <!-- Navigation Buttons -->
+            <div class="step-nav-buttons">
+              <button type="button" class="btn-auth-prev" id="btn-prev-step">
+                <i class="ri-arrow-left-line"></i> 이전으로
+              </button>
+              <button type="submit" class="btn-auth-submit" id="btn-submit-signup">
+                인증 메일 발송 <i class="ri-send-plane-fill"></i>
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Redirect to Login -->
+        <div class="auth-footer">
+          이미 계정이 있으신가요? <a href="{% url 'accounts:login' %}">로그인하기</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom JavaScript -->
+  <script src="{% static 'accounts/js/login.js' %}?v=1.0.6"></script>
+</body>
+</html>

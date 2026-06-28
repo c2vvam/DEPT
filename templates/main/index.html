@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dept - 프라이빗 대학 소통 커뮤니티 플랫폼</title>
+  <meta name="description" content="기존 대학 커뮤니티의 지나친 개방성을 넘어 학과라는 가장 밀접한 단위의 소통을 실현합니다. 확실한 소속 인증을 거친 학우들과의 프라이빗한 커뮤니티 및 모임 매칭을 시작해 보세요.">
+  
+  <!-- RemixIcon for modern icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}?v=1.0.13">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      corePlugins: {
+        preflight: false,
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        DEPT
+      </a>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#features">핵심 기능</a></li>
+        <li class="nav-item"><a href="#cta">시작하기</a></li>
+      </ul>
+      <div class="nav-buttons">
+        {% if user.is_authenticated %}
+          <div class="profile-menu">
+            <button class="profile-menu-trigger" aria-label="사용자 메뉴">
+              <span class="header-avatar">{{ user.first_name|slice:":1" }}</span>
+              <span class="header-username"><strong>{{ user.first_name }}</strong>님</span>
+              <i class="ri-arrow-down-s-line arrow-icon"></i>
+            </button>
+            <div class="profile-menu-dropdown">
+              <a href="{% url 'accounts:profile' %}"><i class="ri-user-settings-line"></i> 계정 설정</a>
+              <a href="{% url 'accounts:password_change' %}"><i class="ri-lock-password-line"></i> 비밀번호 변경</a>
+              <hr class="profile-menu-divider">
+              <a href="{% url 'accounts:logout' %}" class="logout-item"><i class="ri-logout-box-r-line"></i> 로그아웃</a>
+            </div>
+          </div>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="btn btn-secondary">로그인</a>
+          <a href="{% url 'accounts:signup' %}" class="btn btn-primary">회원가입</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <!-- Interactive Liquid Background -->
+    <div class="liquid-bg-container">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <div class="blob blob-interactive"></div>
+    </div>
+
+    <h1>
+      <span class="typing-text">가장 가까운 <span class="gradient-text">소속감</span>, 학과 중심의 <span class="gradient-text">소통</span></span><span class="typing-cursor"></span>
+    </h1>
+    <p>
+      확실한 소속 인증을 통한 프라이빗 멤버십 관리. 
+      대학 전체의 거대한 익명 소통방을 벗어나 학과 내부의 검증된 학우들과 모임을 안전하고 원활하게 매칭하고 경험하세요.
+    </p>
+    <div class="hero-buttons">
+      <a href="#cta" class="btn btn-lg btn-primary">인증하고 시작하기</a>
+    </div>
+
+
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="reveal">
+    <div class="section-header">
+      <h2>가장 가까운 단위에서 시작되는 <br> <span>검증된 대학 소통</span></h2>
+      <p>기존 대학 커뮤니티의 지나친 개방성을 극복하고<br>학과 중심의 소속감과 신뢰도 높은 캠퍼스 라이프를 설계합니다.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ri-shield-check-line"></i></div>
+        <h3>학과 소속 인증</h3>
+        <p>학생증과 학교 이메일 인증으로 신원을 확실히 검증하여, 익명성으로 인한 노쇼·사기·비방 등의 위험을 사전에 차단합니다.</p>
+      </div>
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ri-dashboard-line"></i></div>
+        <h3>스마트 대시보드</h3>
+        <p>학과 구성원들을 위한 전용 스마트 대시보드로 자신의 소속 및 모임 매칭 정보를 한눈에 관리합니다.</p>
+      </div>
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ri-user-shared-line"></i></div>
+        <h3>모임 매칭</h3>
+        <p>함께 할 최적의 소규모 팀 빌딩과 시너지 매칭을 지원합니다.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CTA Section -->
+  <section id="cta" class="reveal">
+    <div class="cta-section">
+      <h2>우리 학과만의 프라이빗한 소통과 완벽한 팀 빌딩.</h2>
+      <p>
+        학생증 인증을 마친 검증된 학과 동기, 선후배들과 자유롭게 소통하고, 나에게 딱 맞는 모임을 시작해 보세요.
+      </p>
+      <div class="flex justify-center gap-[16px]">
+        <a href="{% url 'accounts:signup' %}" class="btn btn-lg btn-primary">지금 무료로 회원가입</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>DEPT</h3>
+        <p>
+          학생증 및 학교 이메일로 검증된 학과(부) 구성원들을 위한 AI 모임 매칭 플랫폼.
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; c2vvam. All rights reserved.</div>
+      <div class="footer-socials">
+        <a href="#"><i class="ri-github-fill"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Custom JavaScript -->
+  <script src="{% static 'main/js/main.js' %}?v=1.0.8"></script>
+</body>
+</html>

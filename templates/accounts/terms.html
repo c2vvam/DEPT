@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이용약관 - DEPT</title>
+  <meta name="description" content="DEPT 서비스 이용약관을 안내해 드립니다.">
+  
+  <!-- RemixIcon for modern icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  
+  <!-- Custom Fonts & CSS -->
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}?v=1.0.5">
+  <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}?v=1.0.5">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      corePlugins: {
+        preflight: false,
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <!-- Back to Signup Link -->
+    <a href="javascript:window.close();" class="back-home">
+      <i class="ri-close-line"></i> 창 닫기
+    </a>
+
+    <!-- Interactive Background Blobs -->
+    <div class="auth-bg-blob auth-blob-1"></div>
+    <div class="auth-bg-blob auth-blob-2"></div>
+
+    <div class="auth-container max-w-[600px] w-full px-[16px]">
+      <div class="auth-card p-[32px] md:p-[40px]">
+        
+        <!-- Auth Card Header -->
+        <div class="auth-header mb-[24px]">
+          <span class="auth-logo text-[24px] font-bold tracking-tight text-white block mb-[8px]">DEPT</span>
+          <h2 class="text-[20px] font-bold text-white mb-[8px]">서비스 이용약관</h2>
+          <p class="text-[13px] text-[#a0aec0]">DEPT 서비스를 이용하시기 전에 약관을 꼼꼼히 확인해 주세요.</p>
+        </div>
+
+        <!-- Terms Text Content -->
+        <div class="terms-content-box bg-white border border-[#e2e8f0] rounded-[12px] p-[20px] max-h-[400px] overflow-y-auto text-[#2d3748] text-[13px] leading-[1.6] select-text shadow-inner">
+          <h3 class="text-[15px] font-semibold text-[#1a202c] mb-[10px]">제1조 (목적)</h3>
+          <p class="mb-[16px]">이 약관은 DEPT(이하 "서비스" 또는 "회사")가 제공하는 제반 서비스의 이용과 관련하여 회사와 회원과의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+
+          <h3 class="text-[15px] font-semibold text-[#1a202c] mb-[10px]">제2조 (용어의 정의)</h3>
+          <p class="mb-[16px]">1. "회원"이라 함은 회사의 서비스에 접속하여 이 약관에 따라 회사와 이용계약을 체결하고 회사가 제공하는 서비스를 이용하는 고객을 말합니다.<br>
+          2. "서비스"라 함은 회사가 회원에게 제공하는 웹 및 앱 기반의 협업 및 평가 플랫폼을 의미합니다.</p>
+
+          <h3 class="text-[15px] font-semibold text-[#1a202c] mb-[10px]">제3조 (약관의 게시와 개정)</h3>
+          <p class="mb-[16px]">1. 회사는 이 약관의 내용을 회원이 쉽게 알 수 있도록 서비스 초기 화면 또는 회원가입 페이지에 게시합니다.<br>
+          2. 회사는 관계 법령을 위배하지 않는 범위에서 이 약관을 개정할 수 있으며, 약관을 개정할 경우에는 적용일자 및 개정사유를 명시하여 적용일자 7일 전부터 서비스 내에 공지합니다.</p>
+
+          <h3 class="text-[15px] font-semibold text-[#1a202c] mb-[10px]">제4조 (회원가입 및 이용계약 체결)</h3>
+          <p class="mb-[16px]">1. 이용계약은 회원이 되고자 하는 자(이하 "가입신청자")가 약관의 내용에 대하여 동의를 하고 회원가입 신청을 한 후 회사가 이러한 신청에 대하여 승낙함으로써 체결됩니다.<br>
+          2. 회사는 가입신청자의 신청에 대하여 서비스 이용을 승낙함을 원칙으로 합니다. 다만, 회사는 기술상 또는 업무상 차질이 있는 경우 승낙을 보류하거나 거절할 수 있습니다.</p>
+
+          <h3 class="text-[15px] font-semibold text-[#1a202c] mb-[10px]">제5조 (회원의 의무)</h3>
+          <p class="mb-[16px]">1. 회원은 서비스 이용과 관련하여 다음 각 호의 행위를 하여서는 안 됩니다.<br>
+          &nbsp;&nbsp;가. 신청 또는 변경 시 허위내용의 등록<br>
+          &nbsp;&nbsp;나. 타인의 정보도용<br>
+          &nbsp;&nbsp;다. 회사가 게시한 정보의 변경<br>
+          &nbsp;&nbsp;라. 회사가 정한 정보 이외의 정보(컴퓨터 프로그램 등)의 송신 또는 게시<br>
+          &nbsp;&nbsp;마. 회사와 기타 제3자의 저작권 등 지적재산권에 대한 침해<br>
+          &nbsp;&nbsp;바. 회사 및 기타 제3자의 명예를 손상시키거나 업무를 방해하는 행위</p>
+
+          <h3 class="text-[15px] font-semibold text-[#1a202c] mb-[10px]">제6조 (서비스의 변경 및 중단)</h3>
+          <p class="mb-[16px]">1. 회사는 상당한 이유가 있는 경우에 운영상, 기술상의 필요에 따라 제공하고 있는 전부 또는 일부 서비스를 변경하거나 중단할 수 있습니다.<br>
+          2. 서비스의 변경 또는 중단이 발생하는 경우, 회사는 사전에 회원에게 통지하도록 노력합니다.</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-[24px]">
+          <button type="button" class="btn-auth-submit w-full py-[12px] bg-blue-600 text-white rounded-[8px] font-semibold hover:bg-blue-700 transition" onclick="window.close();">
+            확인 및 닫기
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .terms-content-box::-webkit-scrollbar {
+      width: 6px;
+    }
+    .terms-content-box::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 4px;
+    }
+    .terms-content-box::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    .terms-content-box::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</body>
+</html>

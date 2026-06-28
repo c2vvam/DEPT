@@ -1,0 +1,390 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 탈퇴 - dept</title>
+  <meta name="description" content="dept 계정을 안전하게 삭제합니다.">
+  
+  <!-- RemixIcon for modern icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  
+  <!-- Custom Fonts & CSS -->
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}?v=1.0.4">
+  <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}?v=1.0.4">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      corePlugins: {
+        preflight: false,
+      }
+    }
+  </script>
+  <style>
+    .warning-box {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      color: #ef4444;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .warning-box h4 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .warning-box ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+    .agreement-group {
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .agreement-checkbox {
+      margin-top: 3px;
+      cursor: pointer;
+      accent-color: #ef4444;
+      width: 16px;
+      height: 16px;
+    }
+    .agreement-label {
+      font-size: 14px;
+      color: var(--text-secondary, #b0b3b8);
+      user-select: none;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+    .btn-withdraw {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+    .btn-withdraw:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+    }
+    .btn-withdraw:disabled {
+      background: #3a3b3c;
+      color: #727477;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Glowing Blobs -->
+  <div class="bg-glow-container">
+    <div class="profile-bg-blob profile-blob-1"></div>
+    <div class="profile-bg-blob profile-blob-2"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="{% url 'main:index' %}" class="logo">
+        DEPT
+      </a>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="{% url 'aimatch:matching' %}">AI 매칭</a></li>
+        <li class="nav-item"><a href="{% url 'main:index' %}">대시보드</a></li>
+      </ul>
+      <div class="nav-buttons flex items-center">
+        {% if user.is_authenticated %}
+          <!-- Notification Menu -->
+          <div class="notification-menu">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <button class="notification-trigger" aria-label="알림 메뉴">
+              <i class="ri-notification-3-line"></i>
+              <span id="notification-badge" class="notification-badge hidden">0</span>
+            </button>
+            <div class="notification-dropdown">
+              <div class="notification-header">
+                <h3><i class="ri-notification-3-line"></i> 알림</h3>
+                <button id="mark-all-read-btn" class="btn-mark-all">모두 읽음</button>
+              </div>
+              <div id="notification-list" class="notification-list">
+                <div class="notification-empty">새로운 알림이 없습니다.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-menu">
+            <button class="profile-menu-trigger" aria-label="사용자 메뉴">
+              <span class="header-avatar">{{ user.first_name|slice:":1" }}</span>
+              <span class="header-username"><strong>{{ user.first_name }}</strong>님</span>
+              <i class="ri-arrow-down-s-line arrow-icon"></i>
+            </button>
+            <div class="profile-menu-dropdown">
+              <a href="{% url 'accounts:profile' %}"><i class="ri-user-settings-line"></i> 계정 설정</a>
+              <a href="{% url 'accounts:password_change' %}"><i class="ri-lock-password-line"></i> 비밀번호 변경</a>
+              <a href="{% url 'accounts:withdraw' %}"><i class="ri-user-unfollow-line"></i> 회원 탈퇴</a>
+              <hr class="profile-menu-divider">
+              <a href="{% url 'accounts:logout' %}" class="logout-item"><i class="ri-logout-box-r-line"></i> 로그아웃</a>
+            </div>
+          </div>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="btn btn-secondary">로그인</a>
+          <a href="{% url 'accounts:signup' %}" class="btn btn-primary">회원가입</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Profile Wrapper -->
+  <div class="profile-wrapper">
+    <div class="profile-container">
+      
+      <!-- Sidebar Navigation -->
+      <aside class="profile-sidebar">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar">
+            {{ user.first_name|slice:":1" }}
+          </div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-username">{{ user.first_name }}</span>
+            <span class="sidebar-usertype">{{ profile.get_user_type_display }}</span>
+          </div>
+        </div>
+        <ul class="sidebar-menu">
+          <li>
+            <a href="{% url 'accounts:profile' %}" class="sidebar-link">
+              <i class="ri-user-settings-line"></i> 계정 설정
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'accounts:password_change' %}" class="sidebar-link">
+              <i class="ri-lock-password-line"></i> 비밀번호 변경
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'accounts:withdraw' %}" class="sidebar-link active">
+              <i class="ri-user-unfollow-line"></i> 회원 탈퇴
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'accounts:logout' %}" class="sidebar-link">
+              <i class="ri-logout-box-r-line"></i> 로그아웃
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Main Profile Card -->
+      <main class="profile-card">
+        <div class="profile-card-header">
+          <h2>회원 탈퇴</h2>
+          <p>dept 서비스 탈퇴를 진행합니다.</p>
+        </div>
+
+        <!-- System Alerts -->
+        {% if messages %}
+        <div class="profile-messages" id="alert-container">
+          {% for message in messages %}
+          <div class="profile-alert alert-{{ message.tags }}">
+            {% if message.tags == 'success' %}
+              <i class="ri-checkbox-circle-line text-[18px]"></i>
+            {% else %}
+              <i class="ri-error-warning-line text-[18px]"></i>
+            {% endif %}
+            <span>{{ message }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Danger Warning Box -->
+        <div class="warning-box">
+          <h4><i class="ri-error-warning-fill"></i> 탈퇴 시 유의사항 안내</h4>
+          탈퇴가 완료되면 귀하의 모든 개인정보 및 서비스 데이터가 복구 불가능한 상태로 영구 삭제됩니다.
+          <ul>
+            <li>등록된 프로필 및 나이 정보 영구 삭제</li>
+            <li>로그인 계정 및 인증 정보 영구 삭제</li>
+            <li>탈퇴 완료 시 즉시 로그아웃되며 로그인할 수 없음</li>
+          </ul>
+        </div>
+
+        <!-- Withdrawal Form -->
+        <form method="POST" action="{% url 'accounts:withdraw' %}" id="withdraw-form">
+          {% csrf_token %}
+
+          <!-- Password Input -->
+          <div class="form-group">
+            <label class="form-label" for="password">본인 확인 비밀번호</label>
+            <div class="input-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="auth-input" 
+                placeholder="현재 비밀번호를 입력해주세요"
+                required
+              >
+              <i class="ri-lock-line input-icon"></i>
+              <button type="button" class="password-toggle" data-target="password" aria-label="비밀번호 보이기/숨기기">
+                <i class="ri-eye-line"></i>
+              </button>
+            </div>
+            <div class="form-help">
+              <i class="ri-information-line"></i> 계정 삭제 보안을 위해 현재 사용 중인 비밀번호를 다시 한 번 확인합니다.
+            </div>
+          </div>
+
+          <!-- Agreement Checkbox -->
+          <div class="agreement-group" id="agreement-container">
+            <input type="checkbox" id="agree" class="agreement-checkbox" required>
+            <label for="agree" class="agreement-label">
+              안내 사항을 모두 확인하였으며, 이에 동의하여 회원 탈퇴를 진행합니다. (필수)
+            </label>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <a href="{% url 'accounts:profile' %}" class="btn-cancel">취소</a>
+            <button type="submit" class="btn-withdraw" id="submit-btn" disabled>
+              회원 탈퇴 완료 <i class="ri-user-unfollow-line"></i>
+            </button>
+          </div>
+
+        </form>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>DEPT</h3>
+        <p>
+          기존 조별과제 프로젝트의 비효율성을 극복하고,<br>
+          조장 몰림 현상 해결 및 공정한 학점(Credit) 평가와 캠퍼스 라이프를 도모하는 AI 협업 도구.
+        </p>
+      </div>
+      <div class="footer-links">
+        <h4>서비스</h4>
+        <ul>
+          <li><a href="{% url 'main:index' %}#features">핵심 기능</a></li>
+          <li><a href="{% url 'main:index' %}#demo">데모 체험</a></li>
+          <li><a href="#">요금안내</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>개발자 정보</h4>
+        <ul>
+          <li><a href="#">팀 소개</a></li>
+          <li><a href="#">문의하기</a></li>
+          <li><a href="#">Github 저장소</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>고객 센터</h4>
+        <ul>
+          <li><a href="#">자주 묻는 질문 (FAQ)</a></li>
+          <li><a href="#">개인정보처리방침</a></li>
+          <li><a href="#">이용약관</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div>&copy; 2026 dept. All rights reserved.</div>
+      <div class="footer-socials">
+        <a href="#"><i class="ri-github-fill"></i></a>
+        <a href="#"><i class="ri-mail-fill"></i></a>
+        <a href="#"><i class="ri-global-line"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Page Interactivity Scripts -->
+  <script src="{% static 'main/js/notifications.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. Password Visibility Toggle
+      const toggles = document.querySelectorAll('.password-toggle');
+      toggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const targetInput = document.getElementById(targetId);
+          const icon = this.querySelector('i');
+          
+          if (targetInput.type === 'password') {
+            targetInput.type = 'text';
+            icon.classList.remove('ri-eye-line');
+            icon.classList.add('ri-eye-off-line');
+          } else {
+            targetInput.type = 'password';
+            icon.classList.remove('ri-eye-off-line');
+            icon.classList.add('ri-eye-line');
+          }
+        });
+      });
+
+      // 2. Real-time form validation
+      const passwordInput = document.getElementById('password');
+      const agreeCheckbox = document.getElementById('agree');
+      const submitBtn = document.getElementById('submit-btn');
+      const form = document.getElementById('withdraw-form');
+
+      function validateForm() {
+        const hasPassword = passwordInput.value.trim().length > 0;
+        const hasAgreed = agreeCheckbox.checked;
+        
+        submitBtn.disabled = !(hasPassword && hasAgreed);
+      }
+
+      passwordInput.addEventListener('input', validateForm);
+      agreeCheckbox.addEventListener('change', validateForm);
+
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          if (submitBtn.dataset.submitted === 'true') {
+            e.preventDefault();
+            return;
+          }
+          submitBtn.dataset.submitted = 'true';
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '탈퇴 처리 중... <i class="ri-loader-4-line animate-spin"></i>';
+        });
+      }
+
+      // 3. Auto-Dismiss Alert Messages smoothly
+      const alertContainer = document.getElementById('alert-container');
+      if (alertContainer) {
+        setTimeout(function() {
+          alertContainer.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+          alertContainer.style.opacity = '0';
+          alertContainer.style.transform = 'translateY(-10px)';
+          setTimeout(function() {
+            alertContainer.remove();
+          }, 600);
+        }, 4000); // 4 seconds before auto-dismiss
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학생증 인증 - dept</title>
+  <meta name="description" content="dept 이용을 위한 모바일 학생증 인증 단계입니다.">
+  
+  <!-- RemixIcon for modern icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  
+  <!-- Custom Fonts & CSS -->
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}?v=1.0.5">
+  <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}?v=1.0.5">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      corePlugins: {
+        preflight: false,
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <!-- Interactive Background Blobs -->
+    <div class="auth-bg-blob auth-blob-1"></div>
+    <div class="auth-bg-blob auth-blob-2"></div>
+    <div class="auth-bg-blob auth-blob-interactive" id="interactive-blob"></div>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        
+        <!-- Auth Card Header -->
+        <div class="auth-header">
+          <a href="{% url 'main:index' %}" class="auth-logo">
+            DEPT
+          </a>
+          <h2>모바일 학생증 인증</h2>
+          <p>공정하고 신뢰할 수 있는 인증을 위한 마지막 단계입니다.</p>
+        </div>
+
+        <!-- Messages Alerts -->
+        {% if messages %}
+        <div class="auth-messages">
+          {% for message in messages %}
+          <div class="auth-alert alert-{{ message.tags }}">
+            <i class="ri-error-warning-line alert-icon"></i>
+            <span class="alert-text">{{ message }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Progress Bar for Step 5 -->
+        <div class="signup-progress mb-[32px]">
+          <div class="progress-line-bg">
+            <div class="progress-line-fill w-full"></div>
+          </div>
+          <div class="progress-step completed">
+            <div class="step-dot">
+              <i class="ri-mail-check-line"></i>
+            </div>
+            <span class="step-label">이메일 인증</span>
+          </div>
+          <div class="progress-step completed">
+            <div class="step-dot">
+              <i class="ri-file-list-3-line"></i>
+            </div>
+            <span class="step-label">추가 정보</span>
+          </div>
+          <div class="progress-step active">
+            <div class="step-dot">
+              <i class="ri-shield-user-line"></i>
+            </div>
+            <span class="step-label">학생증 인증</span>
+          </div>
+        </div>
+
+        <!-- ID Card Verification Block (WOW UI) -->
+        <div class="id-verification-card bg-[rgba(255,255,255,0.05)] border border-solid border-[rgba(255,255,255,0.1)] rounded-[16px] p-[24px] text-center mb-[28px] backdrop-blur-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
+          <div class="card-icon-pulse w-[72px] h-[72px] bg-[rgba(59,130,246,0.1)] border border-solid border-[rgba(59,130,246,0.2)] rounded-full flex items-center justify-center mx-auto mb-[20px] animate-[pulse_2s_infinite]">
+            <i class="ri-bank-card-2-line text-[2.2rem] text-[#3b82f6]"></i>
+          </div>
+          
+          <h3 class="text-[1.15rem] font-bold text-[#1a202c] mb-[12px]">모바일 학생증 연동 시스템</h3>
+          <p class="text-[0.9rem] text-[#4a5568] leading-[1.6] mb-[16px] font-medium">
+            현재 버전은 <strong>테스트용 서비스</strong>로 운영되고 있어, 실제 모바일 학생증의 API 및 인증 모듈 연동 단계는 미구현 상태입니다.
+          </p>
+          
+          <div class="bg-[rgba(245,158,11,0.08)] border border-solid border-[rgba(245,158,11,0.2)] rounded-[12px] py-[12px] px-[16px] text-left flex gap-[10px]">
+            <i class="ri-information-line text-[#d97706] text-[1.2rem] mt-[2px]"></i>
+            <span class="text-[0.82rem] text-[#b45309] leading-[1.4] font-medium">
+              정식 출시 버전에서는 각 대학 모바일 학생증 앱과의 매핑 및 인식을 통한 실명 인증 심사가 적용될 예정입니다.
+            </span>
+          </div>
+        </div>
+
+        <!-- Completion Form -->
+        <form method="POST" action="" id="id-card-form">
+          {% csrf_token %}
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-auth-submit w-full h-[50px] flex items-center justify-center gap-[8px] font-semibold" id="submit-btn">
+            회원가입 완료하기 <i class="ri-checkbox-circle-line"></i>
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+  </style>
+
+  <!-- Script for visuals -->
+  <script src="{% static 'accounts/js/login.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('id-card-form');
+      const submitBtn = document.getElementById('submit-btn');
+      if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+          if (submitBtn.dataset.submitted === 'true') {
+            e.preventDefault();
+            return;
+          }
+          submitBtn.dataset.submitted = 'true';
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '완료 처리 중... <i class="ri-loader-4-line animate-spin"></i>';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
